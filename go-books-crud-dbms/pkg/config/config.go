@@ -12,9 +12,10 @@ var (
 func ConnectDB() *gorm.DB {
 	database, err := gorm.Open("mysql", "Vectormike:password@/go_books_crud_dbms?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
-		panic("Failed to connect to database!", err)
+		panic(err)
 	}
 	db = database
+	return db
 }
 
 func GetDB() *gorm.DB {

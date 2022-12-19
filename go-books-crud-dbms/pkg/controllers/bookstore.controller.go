@@ -64,3 +64,34 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 }
+
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	bookId := params["bookId"]
+	id, err := strconv.Antoi(bookId)
+	if err != nil {
+		fmt.Println(err)
+	}
+	book := &models.Book{}
+	utils.ParseBody(r, book)
+
+	bookDetails := models.GetBook(id)
+	if book.Name != "" {
+		bookDetails.Name = book.Name
+	}
+	if book.Author != "" {
+		bookDetails.Author = book.Author
+	}
+	if book.Price != 0 {
+		bookDetails.Price = book.Price
+	}
+	if book.Published != false {
+		bookDetails.Published = book.Published
+	}
+
+	db.Save(&bookDetails)
+	response, _ := json.Marshal(bookDetails)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+}
