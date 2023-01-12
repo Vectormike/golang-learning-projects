@@ -33,15 +33,15 @@ func GetBooks() []*Book {
 	return books
 }
 
-func GetBook(id string) *Book {
-	var book Book
+func GetBook(id int64) *Book {
+	var book *Book
 	db.First(&book, id)
-	return &book
+	return book
 }
 
-func DeleteBook(id string) *Book {
-	var book Book
+func DeleteBook(id int64) *Book {
+	var book *Book
 	db.First(&book, id)
-	db.Delete(&book)
-	return &book
+	db.Delete(book)
+	return book
 }

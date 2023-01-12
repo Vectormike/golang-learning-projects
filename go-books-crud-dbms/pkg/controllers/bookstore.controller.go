@@ -21,7 +21,7 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 func GetBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	bookId := params["bookId"]
-	id, err := strconv.Atoi(bookId)
+	id, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -51,7 +51,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	bookId := params["bookId"]
-	id, err := strconv.Atoi(bookId)
+	id, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -68,7 +68,7 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	bookId := params["bookId"]
-	id, err := strconv.Antoi(bookId)
+	id, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println(err)
 	}
