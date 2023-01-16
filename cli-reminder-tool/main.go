@@ -28,7 +28,7 @@ func main() {
 	w.Add(en.All...)
 	w.Add(common.All...)
 
-	t, err := w.Parse(os.Args[2], now)
+	t, err := w.Parse(os.Args[1], now)
 	if err != nil {
 		fmt.Println("Error parsing time", err)
 		os.Exit(1)
@@ -47,7 +47,7 @@ func main() {
 	diff := t.Time.Sub(now)
 	if os.Getenv(markName) == markValue {
 		time.Sleep(diff)
-		err = beeep.Notify("Reminder", strings.Join(os.Args[1:], " "), "")
+		err = beeep.Alert("Reminder", strings.Join(os.Args[1:], " "), "")
 		if err != nil {
 			fmt.Println("Error showing notification", err)
 			os.Exit(1)
