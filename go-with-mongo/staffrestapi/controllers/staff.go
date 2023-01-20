@@ -2,14 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	. "github.com/Vectormike/staffrestapi/config"
-	. "github.com/Vectormike/staffrestapi/dao"
-	. "github.com/Vectormike/staffrestapi/models"
+	. "github.com/Vectormike/go-with-mongo/staffrestapi/config"
+	. "github.com/Vectormike/go-with-mongo/staffrestapi/dao"
+	. "github.com/Vectormike/go-with-mongo/staffrestapi/models"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 	"net/http"
-	"os"
 )
 
 var config = Config{}
@@ -22,7 +20,7 @@ func AllStaff(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJson(w, http.StatusOK, staff)
+	retResponse(w, http.StatusOK, staff)
 }
 
 // Get staff by id
@@ -33,7 +31,7 @@ func FindStaff(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid Staff ID")
 		return
 	}
-	respondWithJson(w, http.StatusOK, staff)
+	retResponse(w, http.StatusOK, staff)
 }
 
 // POST a new staff
@@ -41,7 +39,7 @@ func CreateStaff(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var staff Staff
 	if err := json.NewDecoder(r.Body).Decode(&staff); err != nil {
-		respondWithError(w, httpStatusBadRequest, "Unprocessable Entity")
+		respondWithError(w, http.StatusBadRequest, "Unprocessable Entity")
 	}
 	staff.ID = bson.NewObjectId()
 	if err := dao.Insert(staff); err != nil {
@@ -49,7 +47,7 @@ func CreateStaff(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondWithJson(w, http.StatusCreated, staff)
+	retResponse(w, http.StatusCreated, staff)
 }
 
 // PUT update an existing staff
@@ -64,7 +62,7 @@ func UpdateStaff(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJson(w, http.StatusOK, map[string]string{"result": "success"})
+	retResponse(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 // DELETE an existing staff
@@ -79,5 +77,16 @@ func DeleteStaff(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJson(w, http.StatusOK, map[string]string{"result": "success"})
+	retResponse(w, http.StatusOK, map[string]string{"result": "success"})
+}
+
+func respondWithError(w http.ResponseWriter, code int, msg string) {
+	retResponse(w, code, map[string]string{"error": msg})
+}
+
+func retResponse(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
 }
