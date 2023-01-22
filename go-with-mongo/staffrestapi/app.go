@@ -48,5 +48,7 @@ func main() {
 	r.HandleFunc("/staff/{id}", FindStaff).Methods("GET")
 	r.HandleFunc("/staff/{id}", UpdateStaff).Methods("PUT")
 	r.HandleFunc("/staff/{id}", DeleteStaff).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	if err := http.ListenAndServe(":3000", r); err != nil {
+		log.Fatal(err)
+	}
 }
